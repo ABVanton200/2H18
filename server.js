@@ -11,7 +11,7 @@ server.on('request', (req, res) => {
     switch(pathname[0]) {
         case "add":
             responseData = {
-                "Сумма": parseInt(pathname[1]) + parseInt(pathname[2])
+                "Сумма": parseFloat(pathname[1]) + parseFloat(pathname[2])
             };
             break;
         default:
