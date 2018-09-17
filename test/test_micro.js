@@ -30,25 +30,8 @@ describe('async', ()=> {
 		it(`при подаче ${test.num} должно быть ${test.expect}`, async () => {		
 			let { data } = await get(URL1 + test.num, {headers});
 			({ data } = await get(URL2 + data, {headers}));
-			const delta = Math.abs(data - test.expect);
-			console.log(data);
-			console.log(delta);
+			const delta = Math.abs(data - test.expect);			
 			delta.should.be.below(DIFF);
       	}).timeout(0);
 	}	  
 });
-
-
-/* describe('addition', ()=> {
-	for(let i = -1; i > -540; i-= 1){		
-		it(`при подаче ${i} должно быть ${Math.abs(i) - 1 - (1/3)}`, async () => {	
-			//const expect = Math.abs(i) - 1 - (1/3);
-			let { data } = await get(URL1 + i, {headers});
-			({ data } = await get(URL2 + data, {headers}));
-			console.log(data);
-			data.should.equal(Math.abs(i) - 1 - (1/3));
-      	}).timeout(0);
-	}	  
-}); */
-
-
