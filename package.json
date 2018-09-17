@@ -1,0 +1,16 @@
+{
+  "name": "0709",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha --timeout 10000"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "faker": "^4.1.0",
+    "mocha": "^5.2.0",
+    "puppeteer": "^1.8.0",
+    "should": "^13.2.3"
+  }
+}
