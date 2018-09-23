@@ -2,10 +2,15 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const mathJS = require('mathjs');
 const { get } = require('axios');
+const morgan = require('morgan');
+const expressWinston = require('express-winston');
+const winston = require('winston');
+
 
 const PORT = 4321;
 const headers = {'Content-type': 'application/json'};
 const app = express();
+const router = express.Router();
 const stat = {};
 
 const options = {
@@ -33,6 +38,21 @@ app
 
 	// обслуживание статичных файлов
 	.use(express.static('public', options))
+
+	// подключение логгера morgan
+	.use(morgan('combined'))
+
+	// подключение логгера winston
+	.use(expressWinston.logger({
+		transports: [
+		  new winston.transports.Console({
+			json: true,
+			colorize: true
+		  })
+		]
+	}))
+	  
+	.use(router)
 	
 	// извлечение данных из post-запроса
 	.post('/post', (req, res) => {
@@ -88,6 +108,15 @@ app
 		(async () => {
 			const { data } = await get("https://kodaktor.ru/api2/andba/" + req.params.num, {headers});		
 			res.end(String(data));
+		})()		
+	})
+
+	// погода
+	.get('/weather', (req, res) => {
+		(async () => {			
+			const { data: { query: { results: { channel: { item: { forecast: { "1": { high: tomorrow } } } } } } } } = await get('https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="saint-petersburg, ru") and u="c"&format=json', {headers});	
+			
+			res.json({"Температура завтра днём": tomorrow});
 		})()		
 	})
 
