@@ -1,6 +1,5 @@
 const express = require('express');
-const { get } = require('axios');
-const User = require("./index2.js");
+const User = require("./db.js");
 const bodyParser = require('body-parser');
 
 const PORT = 4321;
@@ -10,7 +9,7 @@ app
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({extended: true}))
   .get(/users/, async r => {
-    const data = await getPass();
+    const data = await getLogins();
     r.res.render('list', { title: 'Список логинов', data });
   })
   .post(/add/, async r => {
@@ -25,7 +24,7 @@ app
 
 
 
-async function getPass() {
+async function getLogins() {
 	const data = await User.find().exec();
 	
 	return data;
