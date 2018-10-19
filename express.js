@@ -5,6 +5,9 @@ const { get } = require('axios');
 const morgan = require('morgan');
 const expressWinston = require('express-winston');
 const winston = require('winston');
+const cors = require('cors');
+const parseString = require('xml2js').parseString;
+const ejs = require('ejs');
 
 
 const PORT = 4321;
@@ -112,12 +115,31 @@ app
 	})
 
 	// погода
-	.get('/weather', (req, res) => {
+	.get('/weather', cors(), (req, res) => {
 		(async () => {			
 			const { data: { query: { results: { channel: { item: { forecast: { "1": { high: tomorrow } } } } } } } } = await get('https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="saint-petersburg, ru") and u="c"&format=json', {headers});	
 			
 			res.json({"Температура завтра днём": tomorrow});
 		})()		
+	})
+
+	// выдача новостей о версиях Node
+	.post('/noderss', cors(), (req, res) => {
+		(async () => {
+			const n = ~~req.body.n;	
+			const { data } = await get('https://nodejs.org/en/feed/blog.xml');
+			parseString(data, {trim: true}, (err, result) => {
+				const news = Array.prototype.slice.call(result["rss"]["channel"][0]["item"], 0, n),
+					html = ejs.render(`<ul>
+						<% news.forEach(function(el){ %>
+							<li><a href=<%= el.link %>><%= el.title %></a></li>
+						<% }); %>
+					</ul>`, {news});
+
+				res.end(html);
+			});			
+		})();
+		
 	})
 
 	
