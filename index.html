@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>Отправка файла</title><meta charset="utf-8">
+   <style>.r {border-radius: 50%; height: 28px; width: 28px; zoom: 150%}
+     [type=file]  {display: none}
+     #f2 {background: gold}
+   </style>
+ </head>
+ <body><script src="https://kodaktor.ru/j/dblttl"></script>
+  <div id="newform">
+      <button id="b" class="r" title="Приложить файл">📎</button>
+  </div>   
+   <form method="post" id="frm" action="/zip"
+         enctype="multipart/form-data" >
+     <input name="fff" id="fff" type="file">
+     <label for="fff">Выберите файл</label><br><br>
+   
+     <input id="f1" type="submit" class="r"  value="✈️" title="Отправить формой">
+     <button id="f2" class="r" title="Отправить скриптом">✈️</button>
+  </form>  
+ 
+  <script>{
+    const tf = document.querySelector('[type=file]');
+    const reader = new FileReader(); 
+      
+    reader.onload = ({ target: { result: r } }) => {
+       // console.log(r);
+    };  
+    document.querySelector('#b').addEventListener('click', e => {
+      tf.dispatchEvent(new MouseEvent('click'));
+    });
+    tf.addEventListener('change', e => {
+      if (tf.files[0]) {
+        document.querySelector('label').textContent = tf.files[0].name;
+        reader.readAsBinaryString(tf.files[0]);
+      }  
+    });    
+    // для xhr требовался бы FileReader
+    document.querySelector('#f2')
+    .addEventListener('click',  e => {
+      (async () => {
+        let r = await fetch(document.querySelector('#frm').action, {  
+          method: 'POST',
+          headers: {
+            "my": "yes",
+          },
+          body: tf.files[0]  
+        });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(await r.blob());
+        a.download = "my.zip";
+        document.body.appendChild(a);  
+        a.click();    
+        a.remove();           
+      })();
+      e.preventDefault(); // чтобы форма не срабатывала
+      // эта инструкция работает вне асинхронной функции
+      // иначе если весь слушатель сделать async e
+      // как в https://kodaktor.ru/filezip1_35b22
+      // то умолчанное действие формы успевает сработать
+    });  
+  
+  
+}</script> 
+ </body>
+</html>

@@ -1,7 +1,7 @@
 {
-  "name": "2610",
+  "name": "0211",
   "version": "1.0.0",
-  "main": "master.js",
+  "main": "index.js",
   "license": "MIT",
   "dependencies": {    
   },
