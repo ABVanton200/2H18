@@ -1,0 +1,1 @@
+require('http').get('http://kodaktor.ru/j/users', res => res.pipe(process.stdout));
