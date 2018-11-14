@@ -9,16 +9,13 @@ const clients = [];
 
 server.listen(PORT);
 
-io.on('connection', ws => {                
-  let id = Math.random();
-  clients[id] = ws;
+io.on('connection', ws => { 
   ws
-    .on('event', message => {
-      //Object.values(clients).forEach(client => client.emit('event', message));    
+    .on('event', message => {      
       io.emit('event', message) 
     })
     .on('disconnect', ()=> {
-      delete clients[id];
+      console.log('Disconnected');
     });
 });
 
