@@ -1,23 +1,34 @@
-const fs = require('fs');
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const bodyParser = require('body-parser');
+const path = require('path');
 
-const Trans = require('./trans');
+const PORT = '3336';
+const clients = [];
 
-require('http')
-  .Server((r, rs) => {
-    const { url: u } = r;
-    
-    switch (u) {
-      case '/':
-      case '/index.html': {
-        fs.createReadStream('./index.html').pipe(rs);
-        break;
-      }
+server.listen(PORT);
 
-      case '/zip': {        
-        rs.writeHead(200, {});
-        r.pipe(new Trans(r.headers)).pipe(require('zlib').createGzip()).pipe(rs);
-        break;
-      }
-    }  
-	
-  }).listen(4321);
+io.on('connection', ws => {                
+  let id = Math.random();
+  clients[id] = ws;
+  ws
+    .on('event', message => {
+      //Object.values(clients).forEach(client => client.emit('event', message));    
+      io.emit('event', message) 
+    })
+    .on('disconnect', ()=> {
+      delete clients[id];
+    });
+});
+
+app  
+  .use(bodyParser.json())
+  .use(bodyParser.urlencoded({extended: true}))
+
+  .get(['/', '/index.html'], r => {
+    r.res.sendFile(path.resolve(__dirname, 'index.html'));
+  })
+
+  .use(r => r.res.status(404).end('Still not here, sorry!'))
+  .use((e, r, res, n) => res.status(500).end(`Error: ${e}`));
