@@ -1,0 +1,10 @@
+doctype html
+html(lang='ru')
+  head
+    title= title
+  body    
+    #container
+      p Список логинов:
+      ol
+        each elem in items
+          li= elem.login
