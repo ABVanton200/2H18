@@ -36,6 +36,10 @@ https://github.com/ABVanton200/2H18/tree/lesson2109
 
 https://github.com/ABVanton200/2H18/tree/streams
 
+## GZIP-0001
+
+https://github.com/ABVanton200/2H18/tree/lesson0211
+
 ## CODE-001
 
 https://github.com/ABVanton200/2H18/tree/lesson2311
@@ -54,10 +58,13 @@ https://github.com/ABVanton200/2H18/tree/lesson0911
 
 https://github.com/ABVanton200/2H18/tree/lesson0911_2
 
+## NODE-005
+
+https://github.com/ABVanton200/2H18/tree/cms
+
 ## TERM-001
 
 https://github.com/ABVanton200/2H18_pract
 
 
->DOCK-001
->NODE-005
+
